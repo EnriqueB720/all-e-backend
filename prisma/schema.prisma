@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id            Int       @id @default(autoincrement())
+  walletAddress String    @unique @map("wallet_address")
+  email         String    @unique @db.VarChar(100)
+  password      String 
+  username      String    @unique @db.VarChar(100)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  watch         Watch?
+
+  @@map("Users")
+}
+
+model Watch{
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [ownerId], references: [id])
+  ownerId       Int       @unique @map("owner_id")
+  serialNum     Int       @unique @map("serial_num")
+  metadataURI   String    @unique @map("metadata_uri")
+  lastSynced    DateTime  @map("last_synced")
+  ownershipLog  OwnershipLog?  
+
+  @@map("Watchs")
+}
+
+model OwnershipLog{
+  id            Int       @id @default(autoincrement())
+  watch         Watch     @relation(fields: [watchId], references: [id])
+  watchId       Int       @unique @map("watch_id")
+  ownerId       Int       @unique @map("owner_id")
+  timestamp     DateTime  @default(now())
+
+  @@map("Ownershiplogs")
+}
