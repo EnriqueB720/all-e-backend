@@ -3,14 +3,14 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class WatchWhereInput {
   @Field(() => Number)
-  ownerId: number;
+  ownerId?: number;
 
   @Field(() => Number, { nullable: true })
-  serialNum: number;
+  serialNum?: number;
 
   @Field(() => String, {  nullable: true  })
-  metadataURI: string;
+  metadataURI?: string;
 
   @Field(() => Date)
-  lastSynced: Date;
+  lastSynced?: Date;
 }

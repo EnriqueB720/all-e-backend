@@ -3,10 +3,10 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Watch {
   @Field(() => Number)
-  id: number;
+  id?: number;
 
   @Field(() => Number)
-  ownerId: number;
+  ownerId?: number;
 
   @Field(() => Number, { nullable: true })
   serialNum?: number;
@@ -15,7 +15,7 @@ export class Watch {
   metadataURI?: string;
 
   @Field(() => Date)
-  lastSynced: Date;
+  lastSynced?: Date;
 
   //TODO Ownership Log property
   //TODO User binding property
