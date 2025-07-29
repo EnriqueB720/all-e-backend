@@ -1,11 +1,11 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class WatchCreateInput {
-  @Field(() => Number)
+  @Field(() => Int)
   ownerId: number;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => Int, { nullable: true })
   serialNum: number;
 
   @Field(() => String, {  nullable: true  })

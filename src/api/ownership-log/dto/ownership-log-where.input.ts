@@ -1,10 +1,10 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class OwnershipLogWhereInput {
-  @Field(() => Number)
+  @Field(() => Int)
   ownerId?: number;
 
-  @Field(() => Number)
+  @Field(() => Int)
   watchId?: number;
 }
