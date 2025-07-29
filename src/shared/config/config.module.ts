@@ -21,7 +21,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: 'schema.gql',
-      playground: true,
+      graphiql: true,
       driver: ApolloDriver,
     }),
     ScheduleModule.forRoot(),
