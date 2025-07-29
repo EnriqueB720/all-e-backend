@@ -1,4 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { OwnershipLog } from 'src/api/ownership-log/model';
+import { User } from 'src/api/user/model';
 
 @ObjectType()
 export class Watch {
@@ -17,6 +19,9 @@ export class Watch {
   @Field(() => Date)
   lastSynced?: Date;
 
-  //TODO Ownership Log property
-  //TODO User binding property
+  @Field(() => [OwnershipLog], {nullable: true})
+  ownerShipLog?: OwnershipLog[];
+  
+  @Field(() => User, {nullable: true})
+  user?: User;
 }
