@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Language } from '@prisma/client';
 import { Watch } from 'src/api/watch/model';
 
 @ObjectType()
@@ -18,6 +19,9 @@ export class User {
   @Field(() => Date)
   createdAt?: Date;
 
-  @Field(() => Watch, {nullable: true})
-  watch?: Watch;
+  @Field(() => Language)
+  language?: Language;
+
+  @Field(() => [Watch], {nullable: true})
+  watch?: Watch[];
 }
