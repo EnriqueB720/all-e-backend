@@ -8,7 +8,7 @@ export class WatchCreateInput {
   @Field(() => Int, { nullable: true })
   serialNum: number;
 
-  @Field(() => String, {  nullable: true  })
+  @Field({  nullable: true  })
   metadataURI: string;
 
   @Field(() => Date)

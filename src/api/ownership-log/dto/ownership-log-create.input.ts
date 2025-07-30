@@ -7,7 +7,4 @@ export class OwnershipLogCreateInput {
 
   @Field(() => Int)
   watchId?: number;
-
-  @Field(() => Date)
-  timestamp?: Date;
 }

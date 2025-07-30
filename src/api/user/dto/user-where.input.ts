@@ -2,12 +2,12 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UserWhereInput {
-  @Field(() => Number, { nullable: true })
+  @Field({ nullable: true })
   id?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   username?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   email?: string;
 }
