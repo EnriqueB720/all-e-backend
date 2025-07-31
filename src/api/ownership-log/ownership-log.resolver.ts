@@ -7,7 +7,7 @@ import { OwnershipLogArgs } from './dto';
 @Resolver(() => OwnershipLog)
 export class OwnershipLogResolver{
 
-  constructor(private readonly OwnershipLogService: OwnershipLogService) {}
+  constructor(private readonly ownershipLogService: OwnershipLogService) {}
 
   @Query(() => OwnershipLog)
   public async OwnershipLog(

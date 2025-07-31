@@ -6,6 +6,7 @@ interface UserPrismaSelect{
   email?: boolean;
   username?: boolean;
   createdAt?: boolean;
+  language?: boolean;
   watch?: WatchSelect;
 }
 
