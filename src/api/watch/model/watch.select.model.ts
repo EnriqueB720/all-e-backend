@@ -1,4 +1,5 @@
 import { OwnershipLogSelect } from "src/api/ownership-log/model";
+import { UserSelect } from "src/api/user/model";
 
 interface WatchPrismaSelect{
   id?: boolean;
@@ -7,6 +8,7 @@ interface WatchPrismaSelect{
   metadataURI?: boolean;
   lastSynced?: boolean;
   ownershipLog?: OwnershipLogSelect;
+  user?: UserSelect;
 }
 
 
