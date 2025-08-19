@@ -2,7 +2,7 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Watch, WatchSelect } from './model';
 import { WatchService } from './watch.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
-import { WatchArgs, WatchCreateInput } from './dto';
+import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 
 @Resolver(() => Watch)
 export class WatchResolver{
@@ -17,13 +17,20 @@ export class WatchResolver{
     return this.watchService.findOneWatch(args, fields);
   }
 
-
   @Mutation(() => Watch)
   public async createWatch(
     @Args('data') args: WatchCreateInput,
     @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
   ): Promise<Watch> {
     return this.watchService.create(args, fields);
+  }
+
+  @Mutation(() => Watch)
+  public async changeWatchOwnership(
+    @Args('data') args: WatchUpdateInput,
+    @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
+  ): Promise<Watch>{
+    return this.watchService.changeOwnership(args.id, args, fields);
   }
 
 }

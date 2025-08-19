@@ -9,12 +9,12 @@ export class OwnershipLogResolver{
 
   constructor(private readonly ownershipLogService: OwnershipLogService) {}
 
-  @Query(() => OwnershipLog)
-  public async OwnershipLog(
+  @Query(() => [OwnershipLog])
+  public async OwnershipLogs(
     @Args() args: OwnershipLogArgs,
     @GraphQLFields() { fields }: IGraphQLFields<OwnershipLogSelect>
-  ): Promise<OwnershipLog> {
-    throw "Error";
+  ): Promise<OwnershipLog[]> {
+    return this.ownershipLogService.findOwnershipLogsPerWatchId(args, fields);
   }
 
 
