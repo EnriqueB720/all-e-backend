@@ -5,7 +5,7 @@ import Environment from './environment.enum';
 const { LOCAL, DEVELOPMENT, STAGING, PRODUCTION } = Environment;
 
 interface EnvVariables {
- // JWT_SECRET: string;
+ JWT_SECRET: string;
   NODE_ENV: Environment;
   PORT: number;
   DATABASE_URL: string;
@@ -17,7 +17,7 @@ const ENV_VARIABLES_SCHEMA = Joi.object<EnvVariables>({
     .default(LOCAL),
   PORT: Joi.number().default(5000),
   DATABASE_URL: Joi.string().required(),
-  //JWT_SECRET: Joi.string().required(),
+  JWT_SECRET: Joi.string().required(),
 });
 
 export { EnvVariables };
