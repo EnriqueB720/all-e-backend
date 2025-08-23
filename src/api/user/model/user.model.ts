@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Language } from '@prisma/client';
 import { Watch } from 'src/api/watch/model';
 
@@ -25,3 +25,7 @@ export class User {
   @Field(() => [Watch], {nullable: true})
   watch?: Watch[];
 }
+
+registerEnumType(Language,{
+  name: 'Language'
+})

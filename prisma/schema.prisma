@@ -35,8 +35,8 @@ model Watch{
 model OwnershipLog{
   id            Int       @id @default(autoincrement())
   watch         Watch     @relation(fields: [watchId], references: [id])
-  watchId       Int       @unique @map("watch_id")
-  ownerId       Int       @unique @map("owner_id")
+  watchId       Int       @map("watch_id")
+  ownerId       Int       @map("owner_id")
   timestamp     DateTime  @default(now())
 
   @@map("Ownershiplogs")

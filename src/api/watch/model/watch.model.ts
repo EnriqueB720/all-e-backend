@@ -20,7 +20,7 @@ export class Watch {
   lastSynced?: Date;
 
   @Field(() => [OwnershipLog], {nullable: true})
-  ownerShipLog?: OwnershipLog[];
+  ownershipLog?: OwnershipLog[];
   
   @Field(() => User, {nullable: true})
   user?: User;
