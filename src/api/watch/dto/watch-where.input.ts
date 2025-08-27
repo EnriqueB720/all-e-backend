@@ -10,7 +10,4 @@ export class WatchWhereInput {
 
   @Field(() => Int, { nullable: true })
   serialNum?: number;
-
-  @Field({ nullable: true })
-  walletAddress?: string;
 }
