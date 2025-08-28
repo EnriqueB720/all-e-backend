@@ -40,7 +40,8 @@ export class AuthService {
                 id: true,
                 serialNum: true,
                 metadataURI: true,
-                ownerId: true
+                ownerId: true,
+                lastSynced: true
               }
             }
           },
@@ -134,7 +135,8 @@ export class AuthService {
                 id: true,
                 serialNum: true,
                 metadataURI: true,
-                ownerId: true
+                ownerId: true,
+                lastSynced: true
               }
             }
           },
