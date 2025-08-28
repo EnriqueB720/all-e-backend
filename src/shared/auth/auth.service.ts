@@ -34,6 +34,7 @@ export class AuthService {
             username: true,
             walletAddress: true,
             language: true,
+            createdAt: true,
             watch: {
               select: {
                 id: true,
@@ -127,6 +128,7 @@ export class AuthService {
             username: true,
             walletAddress: true,
             language: true,
+            createdAt: true,
             watch: {
               select: {
                 id: true,
