@@ -23,9 +23,9 @@ model User{
 model Watch{
   id            Int       @id @default(autoincrement())
   user          User      @relation(fields: [ownerId], references: [id])
-  ownerId       Int       @unique @map("owner_id")
-  serialNum     Int       @unique @map("serial_num")
-  metadataURI   String    @unique @map("metadata_uri")
+  ownerId       Int       @map("owner_id")
+  serialNum     String    @unique @map("serial_num")
+  metadataURI   String?   @map("metadata_uri")
   lastSynced    DateTime  @map("last_synced")
   ownershipLog  OwnershipLog[]
 
