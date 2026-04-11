@@ -49,7 +49,7 @@ export class AuthService {
       );
 
       if (!user) {
-        throw new Error('Email is incorrect');
+        throw new Error('Invalid email or password');
       }
 
       const userPassword = await this.userService.findUserPassword({
@@ -59,12 +59,15 @@ export class AuthService {
       const valid = await bcrypt.compare(password, userPassword);
 
       if (!valid) {
-        throw new Error('Invalid password');
+        throw new Error('Invalid email or password');
       }
 
       return user && valid ? user : null;
     } catch (error) {
-      throw new Error(error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('An error occurred during login');
     }
   }
 
