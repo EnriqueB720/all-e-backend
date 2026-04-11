@@ -10,8 +10,8 @@ export class Watch {
   @Field(() => Number)
   ownerId?: number;
 
-  @Field(() => Number, { nullable: true })
-  serialNum?: number;
+  @Field(() => String, { nullable: true })
+  serialNum?: string;
 
   @Field(() => String, {  nullable: true  })
   metadataURI?: string;

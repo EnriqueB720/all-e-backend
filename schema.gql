@@ -18,7 +18,7 @@ scalar DateTime
 type Watch {
   id: Float!
   ownerId: Float!
-  serialNum: Float
+  serialNum: String
   metadataURI: String
   lastSynced: DateTime!
   ownershipLog: [OwnershipLog!]
@@ -68,7 +68,7 @@ input UserWhereInput {
 input WatchWhereInput {
   id: Int!
   ownerId: Int!
-  serialNum: Int
+  serialNum: String
 }
 
 input OwnershipLogWhereInput {
@@ -99,7 +99,7 @@ input UserCreateInput {
 
 input WatchCreateInput {
   ownerId: Int!
-  serialNum: Int
+  serialNum: String
   metadataURI: String
   lastSynced: DateTime!
 }
@@ -107,7 +107,7 @@ input WatchCreateInput {
 input WatchUpdateInput {
   id: Int!
   ownerId: Int!
-  serialNum: Int!
+  serialNum: String!
   metadataURI: String!
   lastSynced: DateTime!
 }

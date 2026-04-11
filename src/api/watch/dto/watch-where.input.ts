@@ -8,6 +8,6 @@ export class WatchWhereInput {
   @Field(() => Int)
   ownerId?: number;
 
-  @Field(() => Int, { nullable: true })
-  serialNum?: number;
+  @Field(() => String, { nullable: true })
+  serialNum?: string;
 }

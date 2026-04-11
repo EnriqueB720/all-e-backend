@@ -8,8 +8,8 @@ export class WatchUpdateInput {
   @Field(() => Int)
   ownerId: number;
 
-  @Field(() => Int)
-  serialNum: number;
+  @Field(() => String)
+  serialNum: string;
 
   @Field()
   metadataURI: string;
