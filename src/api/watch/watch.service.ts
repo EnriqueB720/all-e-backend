@@ -16,12 +16,38 @@ export class WatchService {
     { where }: WatchArgs,
     { select }: WatchSelect,
   ): Promise<Watch> {
+    const cleanWhere = Object.fromEntries(
+      Object.entries(where).filter(([_, v]) => v != null && v !== 0),
+    );
+
     return this.prismaService.watch.findFirst({
-      where,
+      where: cleanWhere,
       select,
     });
   }
 
+
+  public async findWatches(
+    { where }: WatchArgs,
+    { select }: WatchSelect,
+  ): Promise<Watch[]> {
+    const { username, walletAddress, ...rest } = where;
+
+    const cleanWhere: any = Object.fromEntries(
+      Object.entries(rest).filter(([_, v]) => v != null && v !== 0),
+    );
+
+    if (username || walletAddress) {
+      cleanWhere.user = {};
+      if (username) cleanWhere.user.username = username;
+      if (walletAddress) cleanWhere.user.walletAddress = walletAddress;
+    }
+
+    return this.prismaService.watch.findMany({
+      where: cleanWhere,
+      select,
+    });
+  }
 
   public async create(
     data: WatchCreateInput,

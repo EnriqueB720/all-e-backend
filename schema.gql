@@ -51,6 +51,7 @@ type Query {
   refreshUser(data: String!): LoginOutput!
   user(where: UserWhereInput!): User!
   watch(where: WatchWhereInput!): Watch!
+  watches(where: WatchWhereInput!): [Watch!]!
   OwnershipLogs(where: OwnershipLogWhereInput!): [OwnershipLog!]!
 }
 
@@ -66,9 +67,11 @@ input UserWhereInput {
 }
 
 input WatchWhereInput {
-  id: Int!
-  ownerId: Int!
+  id: Int
+  ownerId: Int
   serialNum: String
+  username: String
+  walletAddress: String
 }
 
 input OwnershipLogWhereInput {

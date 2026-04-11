@@ -14,7 +14,7 @@ const parsePrismaSelect = (example) =>
       const child = Object.keys(field);
 
       if (key === '__typename') {
-        return select;
+        return { select };
       }
       if (!child.length) {
         return { select: { ...select, [key]: true } };

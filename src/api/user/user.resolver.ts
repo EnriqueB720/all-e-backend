@@ -1,10 +1,13 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { User, UserSelect } from './model';
 import { UserService } from './user.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
 import { UserArgs, UserCreateInput } from './dto';
+import { JwtAuthGuard } from '../../shared/auth/guards';
 
 @Resolver(() => User)
+@UseGuards(JwtAuthGuard)
 export class UserResolver{
 
   constructor(private readonly userService: UserService) {}

@@ -1,10 +1,13 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { OwnershipLog, OwnershipLogSelect } from './model';
 import { OwnershipLogService } from './ownership-log.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
 import { OwnershipLogArgs } from './dto';
+import { JwtAuthGuard } from '../../shared/auth/guards';
 
 @Resolver(() => OwnershipLog)
+@UseGuards(JwtAuthGuard)
 export class OwnershipLogResolver{
 
   constructor(private readonly ownershipLogService: OwnershipLogService) {}
