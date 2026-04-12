@@ -44,7 +44,9 @@
     "joi": "^17.13.3",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pinata": "^2.5.5",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.10.0",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {

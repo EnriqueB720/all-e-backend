@@ -7,6 +7,12 @@ export interface IGraphQLFields<T> {
   fields: T;
 }
 
+// Virtual fields resolved by GraphQL that don't exist in Prisma.
+// Maps virtual field -> Prisma fields that must be selected for the resolver.
+const VIRTUAL_FIELDS: Record<string, string[]> = {
+  certificateUrl: ['metadataURI'],
+};
+
 const parsePrismaSelect = (example) =>
   Object.keys(example).reduce(
     ({ select }, key) => {
@@ -16,6 +22,12 @@ const parsePrismaSelect = (example) =>
       if (key === '__typename') {
         return { select };
       }
+
+      if (VIRTUAL_FIELDS[key]) {
+        const deps = VIRTUAL_FIELDS[key].reduce((acc, dep) => ({ ...acc, [dep]: true }), {});
+        return { select: { ...select, ...deps } };
+      }
+
       if (!child.length) {
         return { select: { ...select, [key]: true } };
       } else {

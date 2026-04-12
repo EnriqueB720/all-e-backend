@@ -1,15 +1,19 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
 import { Watch, WatchSelect } from './model';
 import { WatchService } from './watch.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
 import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 import { JwtAuthGuard } from '../../shared/auth/guards';
+import { PinataService } from '../../shared/pinata/pinata.service';
 
 @Resolver(() => Watch)
 export class WatchResolver{
 
-  constructor(private readonly watchService: WatchService) {}
+  constructor(
+    private readonly watchService: WatchService,
+    private readonly pinataService: PinataService,
+  ) {}
 
   @Query(() => Watch)
   public async watch(
@@ -43,6 +47,12 @@ export class WatchResolver{
     @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
   ): Promise<Watch>{
     return this.watchService.changeOwnership(args.id, args, fields);
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  certificateUrl(@Parent() watch: Watch): string | null {
+    if (!watch.metadataURI) return null;
+    return this.pinataService.getIpfsUrl(watch.metadataURI);
   }
 
 }

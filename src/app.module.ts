@@ -5,15 +5,21 @@ import { ConfigModule } from 'src/shared/config/config.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './shared/auth/auth.module';
 import { UserModule, WatchModule, OwnershipLogModule } from '@apis';
+import { PinataModule } from './shared/pinata/pinata.module';
+import { ResendModule } from './shared/resend/resend.module';
+import { ContactModule } from './api/contact/contact.module';
 
 @Module({
   imports: [
     JwtModule.register({
-      global: true, 
+      global: true,
       secret: process.env.JWT_SECRET
     }),
     PrismaModule,
     ConfigModule,
+    PinataModule,
+    ResendModule,
+    ContactModule,
     AuthModule,
     UserModule,
     WatchModule,

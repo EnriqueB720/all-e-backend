@@ -24,4 +24,7 @@ export class Watch {
   
   @Field(() => User, {nullable: true})
   user?: User;
+
+  @Field(() => String, { nullable: true })
+  certificateUrl?: string;
 }

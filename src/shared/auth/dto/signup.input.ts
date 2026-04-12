@@ -17,6 +17,6 @@ export class SignUpInput {
   @Field()
   password: string;
 
-  @Field()
-  walletAddress: string;
+  @Field({ nullable: true })
+  walletAddress?: string;
 }

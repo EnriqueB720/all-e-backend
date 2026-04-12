@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { SignUpInput } from './dto';
+import { ForgotPasswordInput, ResetPasswordInput, SignUpInput } from './dto';
 
 import { GqlAuthGuard } from './guards';
 
@@ -34,5 +34,15 @@ export class AuthResolver {
   @Query(() => LoginOutput)
   refreshUser(@Args('data') data: string) {
     return this.authService.refreshUser(data);
+  }
+
+  @Mutation(() => Boolean)
+  forgotPassword(@Args('data') data: ForgotPasswordInput) {
+    return this.authService.forgotPassword(data);
+  }
+
+  @Mutation(() => Boolean)
+  resetPassword(@Args('data') data: ResetPasswordInput) {
+    return this.authService.resetPassword(data);
   }
 }

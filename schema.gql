@@ -23,11 +23,12 @@ type Watch {
   lastSynced: DateTime!
   ownershipLog: [OwnershipLog!]
   user: User
+  certificateUrl: String
 }
 
 type User {
   id: Float!
-  walletAddress: String!
+  walletAddress: String
   email: String!
   username: String!
   createdAt: DateTime!
@@ -80,24 +81,48 @@ input OwnershipLogWhereInput {
 }
 
 type Mutation {
+  sendContactMessage(data: ContactInput!): Boolean!
   signup(data: SignUpInput!): User!
+  forgotPassword(data: ForgotPasswordInput!): Boolean!
+  resetPassword(data: ResetPasswordInput!): Boolean!
   createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!): User!
   createWatch(data: WatchCreateInput!): Watch!
   changeWatchOwnership(data: WatchUpdateInput!): Watch!
+}
+
+input ContactInput {
+  name: String!
+  email: String!
+  message: String!
 }
 
 input SignUpInput {
   email: String!
   username: String!
   password: String!
-  walletAddress: String!
+  walletAddress: String
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  newPassword: String!
 }
 
 input UserCreateInput {
-  walletAddress: String!
+  walletAddress: String
   email: String!
   username: String!
   password: String!
+}
+
+input UserUpdateInput {
+  id: Int!
+  walletAddress: String
 }
 
 input WatchCreateInput {
