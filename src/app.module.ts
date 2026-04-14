@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { GqlThrottlerGuard } from './shared/throttler/gql-throttler.guard';
 
 import { PrismaModule } from './shared/datasource/prisma/prisma.module';
 import { ConfigModule } from 'src/shared/config/config.module';
@@ -13,9 +16,14 @@ import { QueueModule } from './shared/queue/queue.module';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      { name: 'short', ttl: 1000, limit: 10 },
+      { name: 'medium', ttl: 60_000, limit: 100 },
+    ]),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '30m' },
     }),
     PrismaModule,
     ConfigModule,
@@ -30,6 +38,8 @@ import { QueueModule } from './shared/queue/queue.module';
     OwnershipLogModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    { provide: APP_GUARD, useClass: GqlThrottlerGuard },
+  ],
 })
 export class AppModule {}

@@ -20,6 +20,7 @@ interface EnvVariables {
   WATCH_CONTRACT_ADDRESS: string;
   REDIS_HOST: string;
   REDIS_PORT: number;
+  CORS_ORIGINS: string;
 }
 
 const ENV_VARIABLES_SCHEMA = Joi.object<EnvVariables>({
@@ -40,6 +41,7 @@ const ENV_VARIABLES_SCHEMA = Joi.object<EnvVariables>({
   WATCH_CONTRACT_ADDRESS: Joi.string().pattern(/^0x[a-fA-F0-9]{40}$/).required(),
   REDIS_HOST: Joi.string().default('127.0.0.1'),
   REDIS_PORT: Joi.number().default(6379),
+  CORS_ORIGINS: Joi.string().default('http://localhost:3000'),
 });
 
 export { EnvVariables };

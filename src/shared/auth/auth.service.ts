@@ -118,10 +118,9 @@ export class AuthService {
       access_token: this.jwtService.sign({
         email: user.email,
         sub: user.id,
-        expiresIn: '1h',
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 30 * 60 * 1000),
       }),
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 30 * 60 * 1000),
       user,
     } as LoginOutput;
   }
