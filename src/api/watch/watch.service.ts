@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { Watch, WatchSelect } from './model';
 
@@ -50,9 +50,16 @@ export class WatchService {
       if (walletAddress) cleanWhere.user.walletAddress = walletAddress;
     }
 
+    if (Object.keys(cleanWhere).length === 0) {
+      throw new BadRequestException(
+        'At least one filter is required (serialNum, username, walletAddress, or ownerId)',
+      );
+    }
+
     return this.prismaService.watch.findMany({
       where: cleanWhere,
       select,
+      take: 100,
     });
   }
 
@@ -106,6 +113,33 @@ export class WatchService {
       }
       throw error;
     }
+  }
+
+  public async retryMint(
+    watchId: number,
+    { select }: WatchSelect,
+  ): Promise<Watch> {
+    const watch = await this.prismaService.watch.findUnique({
+      where: { id: watchId },
+      select: { mintStatus: true },
+    });
+
+    if (!watch) throw new NotFoundException(`Watch ${watchId} not found`);
+    if (watch.mintStatus !== 'FAILED') {
+      throw new BadRequestException(
+        `Watch is not in FAILED state (current: ${watch.mintStatus})`,
+      );
+    }
+
+    const updated = await this.prismaService.watch.update({
+      where: { id: watchId },
+      data: { mintStatus: 'PENDING', txHash: null, tokenId: null },
+      select,
+    });
+
+    await this.mintQueueService.enqueueMint({ watchId });
+
+    return updated;
   }
 
   public async changeOwnership(

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent, Int } from '@nestjs/graphql';
 import { Watch, WatchSelect } from './model';
 import { WatchService } from './watch.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
@@ -49,6 +49,15 @@ export class WatchResolver{
     @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
   ): Promise<Watch>{
     return this.watchService.changeOwnership(args.id, args, fields);
+  }
+
+  @Mutation(() => Watch)
+  @UseGuards(JwtAuthGuard)
+  public async retryMint(
+    @Args('watchId', { type: () => Int }) watchId: number,
+    @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
+  ): Promise<Watch> {
+    return this.watchService.retryMint(watchId, fields);
   }
 
   @ResolveField(() => String, { nullable: true })

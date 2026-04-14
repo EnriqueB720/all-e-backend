@@ -101,6 +101,7 @@ type Mutation {
   updateUser(data: UserUpdateInput!): User!
   createWatch(data: WatchCreateInput!): Watch!
   changeWatchOwnership(data: WatchUpdateInput!): Watch!
+  retryMint(watchId: Int!): Watch!
 }
 
 input ContactInput {
