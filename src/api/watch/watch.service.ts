@@ -7,6 +7,7 @@ import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 import { PrismaService } from '@prisma-datasource';
 import { OwnershipLogService } from '../ownership-log/ownership-log.service';
 import { PinataService } from '../../shared/pinata/pinata.service';
+import { MintQueueService } from '../../shared/queue/mint-queue.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class WatchService {
     private readonly prismaService: PrismaService,
     private readonly ownershipLogService: OwnershipLogService,
     private readonly pinataService: PinataService,
+    private readonly mintQueueService: MintQueueService,
   ) {}
 
   public async findOneWatch(
@@ -75,7 +77,7 @@ export class WatchService {
         ownerUsername: owner.username,
       });
 
-      return await this.prismaService.watch.create({
+      const created = await this.prismaService.watch.create({
         data:{
           ...data,
           metadataURI: cid,
@@ -86,8 +88,12 @@ export class WatchService {
             }
           }
         },
-        select
+        select: { ...(select ?? {}), id: true }
       });
+
+      await this.mintQueueService.enqueueMint({ watchId: (created as any).id });
+
+      return created as any;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -135,6 +141,15 @@ export class WatchService {
       throw new BadRequestException('The new owner must have a wallet address');
     }
 
+    const currentWatch = await this.prismaService.watch.findUnique({
+      where: { id },
+      select: {
+        tokenId: true,
+        mintStatus: true,
+        user: { select: { walletAddress: true } },
+      },
+    });
+
     const cid = await this.pinataService.uploadWatchMetadata({
       serialNum: watch.serialNum,
       ownerWallet: newOwner.walletAddress,
@@ -142,10 +157,24 @@ export class WatchService {
       ownerUsername: newOwner.username,
     });
 
-    return this.prismaService.watch.update({
+    const updated = await this.prismaService.watch.update({
       data: { ...data, metadataURI: cid },
       select,
       where: { id },
     });
+
+    if (
+      currentWatch?.tokenId &&
+      currentWatch.mintStatus === 'MINTED' &&
+      currentWatch.user?.walletAddress
+    ) {
+      await this.mintQueueService.enqueueTransfer({
+        watchId: id,
+        fromAddress: currentWatch.user.walletAddress,
+        toAddress: newOwner.walletAddress,
+      });
+    }
+
+    return updated;
   }
 }

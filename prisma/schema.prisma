@@ -11,13 +11,14 @@ model User{
   id            Int       @id @default(autoincrement())
   walletAddress String?   @unique @map("wallet_address")
   email         String    @unique @db.VarChar(100)
-  password      String 
+  password      String
   username      String    @unique @db.VarChar(100)
   language      Language  @default(ENGLISH)
   createdAt     DateTime  @default(now()) @map("created_at")
   resetToken        String?   @map("reset_token")
   resetTokenExpiry  DateTime? @map("reset_token_expiry")
   watch         Watch[]
+  ownershipLog  OwnershipLog[]
 
   @@map("Users")
 }
@@ -28,6 +29,9 @@ model Watch{
   ownerId       Int       @map("owner_id")
   serialNum     String    @unique @map("serial_num")
   metadataURI   String?   @map("metadata_uri")
+  tokenId       String?   @map("token_id")
+  txHash        String?   @map("tx_hash")
+  mintStatus    MintStatus @default(PENDING) @map("mint_status")
   lastSynced    DateTime  @map("last_synced")
   ownershipLog  OwnershipLog[]
 
@@ -38,6 +42,7 @@ model OwnershipLog{
   id            Int       @id @default(autoincrement())
   watch         Watch     @relation(fields: [watchId], references: [id])
   watchId       Int       @map("watch_id")
+  owner         User      @relation(fields: [ownerId], references: [id])
   ownerId       Int       @map("owner_id")
   timestamp     DateTime  @default(now())
 
@@ -47,4 +52,10 @@ model OwnershipLog{
 enum Language {
   SPANISH
   ENGLISH
+}
+
+enum MintStatus {
+  PENDING
+  MINTED
+  FAILED
 }

@@ -21,19 +21,15 @@ export class OwnershipLogService {
     }
 
     public async createOwnership(
-      {watchId, ...data}: OwnershipLogCreateInput,
+      {watchId, ownerId}: OwnershipLogCreateInput,
       { select }: OwnershipLogSelect,
     ): Promise<OwnershipLog> {
 
       return this.prismaService.ownershipLog.create({
         data:{
-          ...data,
           timestamp: new Date(Date.now()),
-          watch:{
-            connect: {
-              id: watchId
-            }
-          }
+          watch: { connect: { id: watchId } },
+          owner: { connect: { id: ownerId } },
         },
         select
       });

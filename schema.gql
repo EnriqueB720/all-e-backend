@@ -8,6 +8,7 @@ type OwnershipLog {
   watchId: Float!
   timestamp: DateTime!
   watch: Watch
+  owner: User
 }
 
 """
@@ -20,10 +21,21 @@ type Watch {
   ownerId: Float!
   serialNum: String
   metadataURI: String
+  tokenId: String
+  txHash: String
+  mintStatus: MintStatus
   lastSynced: DateTime!
   ownershipLog: [OwnershipLog!]
   user: User
   certificateUrl: String
+  basescanTxUrl: String
+}
+
+"""On-chain mint lifecycle for a watch NFT"""
+enum MintStatus {
+  PENDING
+  MINTED
+  FAILED
 }
 
 type User {

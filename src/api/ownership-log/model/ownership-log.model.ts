@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Watch } from 'src/api/watch/model';
+import { User } from 'src/api/user/model';
 
 @ObjectType()
 export class OwnershipLog {
@@ -17,4 +18,7 @@ export class OwnershipLog {
 
   @Field(() => Watch, {nullable: true})
   watch?: Watch;
+
+  @Field(() => User, { nullable: true })
+  owner?: User;
 }

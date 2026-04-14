@@ -6,6 +6,7 @@ import { GraphQLFields, IGraphQLFields } from '@decorators';
 import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 import { JwtAuthGuard } from '../../shared/auth/guards';
 import { PinataService } from '../../shared/pinata/pinata.service';
+import { BlockchainService } from '../../shared/blockchain/blockchain.service';
 
 @Resolver(() => Watch)
 export class WatchResolver{
@@ -13,6 +14,7 @@ export class WatchResolver{
   constructor(
     private readonly watchService: WatchService,
     private readonly pinataService: PinataService,
+    private readonly blockchainService: BlockchainService,
   ) {}
 
   @Query(() => Watch)
@@ -53,6 +55,12 @@ export class WatchResolver{
   certificateUrl(@Parent() watch: Watch): string | null {
     if (!watch.metadataURI) return null;
     return this.pinataService.getIpfsUrl(watch.metadataURI);
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  basescanTxUrl(@Parent() watch: Watch): string | null {
+    if (!watch.txHash) return null;
+    return this.blockchainService.basescanTxUrl(watch.txHash);
   }
 
 }
