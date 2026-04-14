@@ -4,9 +4,6 @@ import { IsEmail, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
 export class UserCreateInput {
-  @Field({ nullable: true })
-  walletAddress?: string;
-
   @IsEmail()
   @MaxLength(100)
   @Field()

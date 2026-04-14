@@ -13,7 +13,4 @@ export class WatchWhereInput {
 
   @Field(() => String, { nullable: true })
   username?: string;
-
-  @Field(() => String, { nullable: true })
-  walletAddress?: string;
 }

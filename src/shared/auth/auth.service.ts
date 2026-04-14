@@ -70,7 +70,6 @@ export class AuthService {
             id: true,
             email: true,
             username: true,
-            walletAddress: true,
             language: true,
             createdAt: true,
             watch: {
@@ -167,7 +166,6 @@ export class AuthService {
             id: true,
             email: true,
             username: true,
-            walletAddress: true,
             language: true,
             createdAt: true,
             watch: {

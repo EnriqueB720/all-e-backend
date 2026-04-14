@@ -7,9 +7,6 @@ export class User {
   @Field(() => Number)
   id?: number;
 
-  @Field(() => String, { nullable: true })
-  walletAddress?: string;
-
   @Field()
   email?: string;
 

@@ -36,21 +36,19 @@ export class WatchService {
     { where }: WatchArgs,
     { select }: WatchSelect,
   ): Promise<Watch[]> {
-    const { username, walletAddress, ...rest } = where;
+    const { username, ...rest } = where;
 
     const cleanWhere: any = Object.fromEntries(
       Object.entries(rest).filter(([_, v]) => v != null && v !== 0),
     );
 
-    if (username || walletAddress) {
-      cleanWhere.user = {};
-      if (username) cleanWhere.user.username = username;
-      if (walletAddress) cleanWhere.user.walletAddress = walletAddress;
+    if (username) {
+      cleanWhere.user = { username };
     }
 
     if (Object.keys(cleanWhere).length === 0) {
       throw new BadRequestException(
-        'At least one filter is required (serialNum, username, walletAddress, or ownerId)',
+        'At least one filter is required (serialNum, username, or ownerId)',
       );
     }
 
@@ -68,7 +66,7 @@ export class WatchService {
     try {
       const owner = await this.prismaService.user.findUnique({
         where: { id: data.ownerId },
-        select: { username: true, walletAddress: true },
+        select: { username: true },
       });
 
       if (!owner) {
@@ -77,7 +75,6 @@ export class WatchService {
 
       const cid = await this.pinataService.uploadWatchMetadata({
         serialNum: data.serialNum,
-        ownerWallet: owner.walletAddress ?? '',
         registeredAt: new Date().toISOString(),
         ownerUsername: owner.username,
       });
@@ -137,7 +134,7 @@ export class WatchService {
 
     const newOwner = await this.prismaService.user.findUnique({
       where: { id: data.ownerId },
-      select: { username: true, walletAddress: true },
+      select: { username: true },
     });
 
     if (!newOwner) {
@@ -146,7 +143,6 @@ export class WatchService {
 
     const cid = await this.pinataService.uploadWatchMetadata({
       serialNum: watch.serialNum,
-      ownerWallet: newOwner.walletAddress ?? '',
       registeredAt: new Date().toISOString(),
       ownerUsername: newOwner.username,
     });

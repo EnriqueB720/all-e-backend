@@ -16,7 +16,4 @@ export class SignUpInput {
   @MinLength(8)
   @Field()
   password: string;
-
-  @Field({ nullable: true })
-  walletAddress?: string;
 }

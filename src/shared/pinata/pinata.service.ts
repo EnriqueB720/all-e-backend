@@ -4,7 +4,6 @@ import { ConfigService } from '../config/config.service';
 
 export interface WatchMetadata {
   serialNum: string;
-  ownerWallet: string;
   registeredAt: string;
   ownerUsername: string;
 }
