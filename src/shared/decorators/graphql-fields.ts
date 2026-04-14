@@ -11,7 +11,6 @@ export interface IGraphQLFields<T> {
 // Maps virtual field -> Prisma fields that must be selected for the resolver.
 const VIRTUAL_FIELDS: Record<string, string[]> = {
   certificateUrl: ['metadataURI'],
-  basescanTxUrl: ['txHash'],
 };
 
 const parsePrismaSelect = (example) =>

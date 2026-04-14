@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { OwnershipLog } from 'src/api/ownership-log/model';
 import { User } from 'src/api/user/model';
-import { MintStatus } from './mint-status.enum';
 
 @ObjectType()
 export class Watch {
@@ -17,15 +16,6 @@ export class Watch {
   @Field(() => String, {  nullable: true  })
   metadataURI?: string;
 
-  @Field(() => String, { nullable: true })
-  tokenId?: string;
-
-  @Field(() => String, { nullable: true })
-  txHash?: string;
-
-  @Field(() => MintStatus, { nullable: true })
-  mintStatus?: MintStatus;
-
   @Field(() => Date)
   lastSynced?: Date;
 
@@ -37,7 +27,4 @@ export class Watch {
 
   @Field(() => String, { nullable: true })
   certificateUrl?: string;
-
-  @Field(() => String, { nullable: true })
-  basescanTxUrl?: string;
 }
