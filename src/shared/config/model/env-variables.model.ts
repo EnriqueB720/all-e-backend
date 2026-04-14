@@ -15,11 +15,6 @@ interface EnvVariables {
   RESEND_FROM: string;
   APP_URL: string;
   CONTACT_EMAIL: string;
-  BASE_SEPOLIA_RPC_URL: string;
-  DEPLOYER_PRIVATE_KEY: string;
-  WATCH_CONTRACT_ADDRESS: string;
-  REDIS_HOST: string;
-  REDIS_PORT: number;
   CORS_ORIGINS: string;
 }
 
@@ -36,13 +31,8 @@ const ENV_VARIABLES_SCHEMA = Joi.object<EnvVariables>({
   RESEND_FROM: Joi.string().required(),
   APP_URL: Joi.string().required(),
   CONTACT_EMAIL: Joi.string().email().required(),
-  BASE_SEPOLIA_RPC_URL: Joi.string().uri().required(),
-  DEPLOYER_PRIVATE_KEY: Joi.string().length(64).required(),
-  WATCH_CONTRACT_ADDRESS: Joi.string().pattern(/^0x[a-fA-F0-9]{40}$/).required(),
-  REDIS_HOST: Joi.string().default('127.0.0.1'),
-  REDIS_PORT: Joi.number().default(6379),
   CORS_ORIGINS: Joi.string().default('http://localhost:3000'),
-});
+}).unknown(true);
 
 export { EnvVariables };
 

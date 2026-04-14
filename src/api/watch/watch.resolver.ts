@@ -1,12 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation, ResolveField, Parent, Int } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
 import { Watch, WatchSelect } from './model';
 import { WatchService } from './watch.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
 import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 import { JwtAuthGuard } from '../../shared/auth/guards';
 import { PinataService } from '../../shared/pinata/pinata.service';
-import { BlockchainService } from '../../shared/blockchain/blockchain.service';
 
 @Resolver(() => Watch)
 export class WatchResolver{
@@ -14,7 +13,6 @@ export class WatchResolver{
   constructor(
     private readonly watchService: WatchService,
     private readonly pinataService: PinataService,
-    private readonly blockchainService: BlockchainService,
   ) {}
 
   @Query(() => Watch)
@@ -51,25 +49,10 @@ export class WatchResolver{
     return this.watchService.changeOwnership(args.id, args, fields);
   }
 
-  @Mutation(() => Watch)
-  @UseGuards(JwtAuthGuard)
-  public async retryMint(
-    @Args('watchId', { type: () => Int }) watchId: number,
-    @GraphQLFields() { fields }: IGraphQLFields<WatchSelect>
-  ): Promise<Watch> {
-    return this.watchService.retryMint(watchId, fields);
-  }
-
   @ResolveField(() => String, { nullable: true })
   certificateUrl(@Parent() watch: Watch): string | null {
     if (!watch.metadataURI) return null;
     return this.pinataService.getIpfsUrl(watch.metadataURI);
-  }
-
-  @ResolveField(() => String, { nullable: true })
-  basescanTxUrl(@Parent() watch: Watch): string | null {
-    if (!watch.txHash) return null;
-    return this.blockchainService.basescanTxUrl(watch.txHash);
   }
 
 }

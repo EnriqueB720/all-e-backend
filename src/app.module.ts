@@ -11,8 +11,6 @@ import { UserModule, WatchModule, OwnershipLogModule } from '@apis';
 import { PinataModule } from './shared/pinata/pinata.module';
 import { ResendModule } from './shared/resend/resend.module';
 import { ContactModule } from './api/contact/contact.module';
-import { BlockchainModule } from './shared/blockchain/blockchain.module';
-import { QueueModule } from './shared/queue/queue.module';
 
 @Module({
   imports: [
@@ -28,8 +26,6 @@ import { QueueModule } from './shared/queue/queue.module';
     PrismaModule,
     ConfigModule,
     PinataModule,
-    BlockchainModule,
-    QueueModule,
     ResendModule,
     ContactModule,
     AuthModule,

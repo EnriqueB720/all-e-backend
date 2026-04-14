@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import { Watch, WatchSelect } from './model';
 
@@ -7,7 +7,6 @@ import { WatchArgs, WatchCreateInput, WatchUpdateInput } from './dto';
 import { PrismaService } from '@prisma-datasource';
 import { OwnershipLogService } from '../ownership-log/ownership-log.service';
 import { PinataService } from '../../shared/pinata/pinata.service';
-import { MintQueueService } from '../../shared/queue/mint-queue.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -16,7 +15,6 @@ export class WatchService {
     private readonly prismaService: PrismaService,
     private readonly ownershipLogService: OwnershipLogService,
     private readonly pinataService: PinataService,
-    private readonly mintQueueService: MintQueueService,
   ) {}
 
   public async findOneWatch(
@@ -73,13 +71,13 @@ export class WatchService {
         select: { username: true, walletAddress: true },
       });
 
-      if (!owner?.walletAddress) {
-        throw new BadRequestException('A wallet address is required to register a watch');
+      if (!owner) {
+        throw new BadRequestException('Owner not found');
       }
 
       const cid = await this.pinataService.uploadWatchMetadata({
         serialNum: data.serialNum,
-        ownerWallet: owner.walletAddress,
+        ownerWallet: owner.walletAddress ?? '',
         registeredAt: new Date().toISOString(),
         ownerUsername: owner.username,
       });
@@ -98,8 +96,6 @@ export class WatchService {
         select: { ...(select ?? {}), id: true }
       });
 
-      await this.mintQueueService.enqueueMint({ watchId: (created as any).id });
-
       return created as any;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -113,33 +109,6 @@ export class WatchService {
       }
       throw error;
     }
-  }
-
-  public async retryMint(
-    watchId: number,
-    { select }: WatchSelect,
-  ): Promise<Watch> {
-    const watch = await this.prismaService.watch.findUnique({
-      where: { id: watchId },
-      select: { mintStatus: true },
-    });
-
-    if (!watch) throw new NotFoundException(`Watch ${watchId} not found`);
-    if (watch.mintStatus !== 'FAILED') {
-      throw new BadRequestException(
-        `Watch is not in FAILED state (current: ${watch.mintStatus})`,
-      );
-    }
-
-    const updated = await this.prismaService.watch.update({
-      where: { id: watchId },
-      data: { mintStatus: 'PENDING', txHash: null, tokenId: null },
-      select,
-    });
-
-    await this.mintQueueService.enqueueMint({ watchId });
-
-    return updated;
   }
 
   public async changeOwnership(
@@ -171,44 +140,21 @@ export class WatchService {
       select: { username: true, walletAddress: true },
     });
 
-    if (!newOwner?.walletAddress) {
-      throw new BadRequestException('The new owner must have a wallet address');
+    if (!newOwner) {
+      throw new BadRequestException('The new owner could not be found');
     }
-
-    const currentWatch = await this.prismaService.watch.findUnique({
-      where: { id },
-      select: {
-        tokenId: true,
-        mintStatus: true,
-        user: { select: { walletAddress: true } },
-      },
-    });
 
     const cid = await this.pinataService.uploadWatchMetadata({
       serialNum: watch.serialNum,
-      ownerWallet: newOwner.walletAddress,
+      ownerWallet: newOwner.walletAddress ?? '',
       registeredAt: new Date().toISOString(),
       ownerUsername: newOwner.username,
     });
 
-    const updated = await this.prismaService.watch.update({
+    return this.prismaService.watch.update({
       data: { ...data, metadataURI: cid },
       select,
       where: { id },
     });
-
-    if (
-      currentWatch?.tokenId &&
-      currentWatch.mintStatus === 'MINTED' &&
-      currentWatch.user?.walletAddress
-    ) {
-      await this.mintQueueService.enqueueTransfer({
-        watchId: id,
-        fromAddress: currentWatch.user.walletAddress,
-        toAddress: newOwner.walletAddress,
-      });
-    }
-
-    return updated;
   }
 }
