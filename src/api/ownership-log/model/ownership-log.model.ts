@@ -13,6 +13,12 @@ export class OwnershipLog {
   @Field(() => Number)
   watchId?: number;
 
+  @Field(() => String, { nullable: true })
+  metadataURI?: string | null;
+
+  @Field(() => String, { nullable: true })
+  certificateUrl?: string | null;
+
   @Field(() => Date)
   timestamp?: Date;
 

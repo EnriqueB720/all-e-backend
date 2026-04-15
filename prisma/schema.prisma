@@ -44,6 +44,7 @@ model OwnershipLog{
   watchId       Int       @map("watch_id")
   owner         User      @relation(fields: [ownerId], references: [id])
   ownerId       Int       @map("owner_id")
+  metadataURI   String?   @map("metadata_uri")
   timestamp     DateTime  @default(now())
 
   @@map("Ownershiplogs")

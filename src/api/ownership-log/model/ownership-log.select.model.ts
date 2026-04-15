@@ -5,6 +5,7 @@ interface OwnershipLogPrismaSelect{
   id?: boolean;
   ownerId?: boolean;
   watchId?: boolean;
+  metadataURI?: boolean;
   timestamp?: boolean;
   watch?: WatchSelect;
   owner?: UserSelect;

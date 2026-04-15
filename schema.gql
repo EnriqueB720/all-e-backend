@@ -6,6 +6,8 @@ type OwnershipLog {
   id: Float!
   ownerId: Float!
   watchId: Float!
+  metadataURI: String
+  certificateUrl: String
   timestamp: DateTime!
   watch: Watch
   owner: User

@@ -77,6 +77,7 @@ export class WatchService {
         serialNum: data.serialNum,
         registeredAt: new Date().toISOString(),
         ownerUsername: owner.username,
+        previousCid: null,
       });
 
       const created = await this.prismaService.watch.create({
@@ -86,6 +87,7 @@ export class WatchService {
           ownershipLog:{
             create:{
               ownerId: data.ownerId,
+              metadataURI: cid,
               timestamp: new Date(Date.now())
             }
           }
@@ -114,22 +116,9 @@ export class WatchService {
     { select }: WatchSelect,
   ): Promise<Watch> {
 
-    let ownershipLogId = await this.ownershipLogService.createOwnership({
-      ownerId: data.ownerId,
-      watchId: data.id
-    },{
-      select:{
-        id: true
-      }
-    });
-
-    if(!ownershipLogId){
-      throw new BadRequestException('The ownership history could not be updated');
-    }
-
     const watch = await this.prismaService.watch.findUnique({
       where: { id },
-      select: { serialNum: true },
+      select: { serialNum: true, metadataURI: true },
     });
 
     const newOwner = await this.prismaService.user.findUnique({
@@ -145,7 +134,22 @@ export class WatchService {
       serialNum: watch.serialNum,
       registeredAt: new Date().toISOString(),
       ownerUsername: newOwner.username,
+      previousCid: watch.metadataURI ?? null,
     });
+
+    const ownershipLogId = await this.ownershipLogService.createOwnership({
+      ownerId: data.ownerId,
+      watchId: data.id,
+      metadataURI: cid,
+    },{
+      select:{
+        id: true
+      }
+    });
+
+    if(!ownershipLogId){
+      throw new BadRequestException('The ownership history could not be updated');
+    }
 
     return this.prismaService.watch.update({
       data: { ...data, metadataURI: cid },

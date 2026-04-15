@@ -6,6 +6,7 @@ export interface WatchMetadata {
   serialNum: string;
   registeredAt: string;
   ownerUsername: string;
+  previousCid?: string | null;
 }
 
 @Injectable()

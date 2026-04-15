@@ -7,4 +7,7 @@ export class OwnershipLogCreateInput {
 
   @Field(() => Int)
   watchId: number;
+
+  @Field(() => String, { nullable: true })
+  metadataURI?: string | null;
 }
