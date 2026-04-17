@@ -8,6 +8,7 @@ import { ConfigModule } from 'src/shared/config/config.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './shared/auth/auth.module';
 import { UserModule, WatchModule, OwnershipLogModule } from '@apis';
+import { TransferRequestModule } from './api/transfer-request/transfer-request.module';
 import { PinataModule } from './shared/pinata/pinata.module';
 import { ResendModule } from './shared/resend/resend.module';
 import { ContactModule } from './api/contact/contact.module';
@@ -31,7 +32,8 @@ import { ContactModule } from './api/contact/contact.module';
     AuthModule,
     UserModule,
     WatchModule,
-    OwnershipLogModule
+    OwnershipLogModule,
+    TransferRequestModule,
   ],
   controllers: [],
   providers: [

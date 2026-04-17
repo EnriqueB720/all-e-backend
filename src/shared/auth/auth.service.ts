@@ -26,7 +26,8 @@ export class AuthService {
     private configService: ConfigService,
   ) { }
 
-  async forgotPassword({ email }: ForgotPasswordInput): Promise<boolean> {
+  async forgotPassword({ email: rawEmail }: ForgotPasswordInput): Promise<boolean> {
+    const email = rawEmail.toLowerCase();
     const user = await this.prismaService.user.findUnique({ where: { email } });
     if (!user) return true;
 
@@ -76,6 +77,11 @@ export class AuthService {
               select: {
                 id: true,
                 serialNum: true,
+                brand: true,
+                model: true,
+                referenceNumber: true,
+                yearOfProduction: true,
+                imageUrl: true,
                 metadataURI: true,
                 ownerId: true,
                 lastSynced: true
@@ -108,8 +114,8 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }: LoginUserInput) {
-
+  async login({ email: rawEmail, password }: LoginUserInput) {
+    const email = rawEmail.toLowerCase();
     const user = await this.validateUser(email, password);
 
     if (!user) return null;
@@ -125,9 +131,11 @@ export class AuthService {
   }
 
   async signup(signUpInput: SignUpInput, select: UserSelect) {
+    const email = signUpInput.email.toLowerCase();
+
     const userPassword = await this.userService.findUserPassword({
       where: {
-        email: signUpInput.email,
+        email,
       },
     });
 
@@ -140,6 +148,7 @@ export class AuthService {
     return this.userService.create(
       {
         ...signUpInput,
+        email,
         password,
       },
       {
@@ -172,6 +181,11 @@ export class AuthService {
               select: {
                 id: true,
                 serialNum: true,
+                brand: true,
+                model: true,
+                referenceNumber: true,
+                yearOfProduction: true,
+                imageUrl: true,
                 metadataURI: true,
                 ownerId: true,
                 lastSynced: true

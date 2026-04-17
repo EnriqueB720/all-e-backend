@@ -13,6 +13,21 @@ export class Watch {
   @Field(() => String, { nullable: true })
   serialNum?: string;
 
+  @Field(() => String, { nullable: true })
+  brand?: string;
+
+  @Field(() => String, { nullable: true })
+  model?: string;
+
+  @Field(() => String, { nullable: true })
+  referenceNumber?: string;
+
+  @Field(() => Number, { nullable: true })
+  yearOfProduction?: number;
+
+  @Field(() => String, { nullable: true })
+  imageUrl?: string;
+
   @Field(() => String, {  nullable: true  })
   metadataURI?: string;
 

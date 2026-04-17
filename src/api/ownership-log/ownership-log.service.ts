@@ -20,6 +20,23 @@ export class OwnershipLogService {
       });
     }
 
+    public async findActivityForUser(userId: number): Promise<OwnershipLog[]> {
+      return this.prismaService.ownershipLog.findMany({
+        where: { ownerId: userId },
+        select: {
+          id: true,
+          ownerId: true,
+          watchId: true,
+          timestamp: true,
+          metadataURI: true,
+          watch: { select: { serialNum: true, brand: true, model: true } },
+          owner: { select: { id: true, username: true } },
+        },
+        orderBy: { timestamp: 'desc' },
+        take: 20,
+      });
+    }
+
     public async createOwnership(
       {watchId, ownerId, metadataURI}: OwnershipLogCreateInput,
       { select }: OwnershipLogSelect,

@@ -5,6 +5,11 @@ interface WatchPrismaSelect{
   id?: boolean;
   ownerId?: boolean;
   serialNum?: boolean;
+  brand?: boolean;
+  model?: boolean;
+  referenceNumber?: boolean;
+  yearOfProduction?: boolean;
+  imageUrl?: boolean;
   metadataURI?: boolean;
   lastSynced?: boolean;
   ownershipLog?: OwnershipLogSelect;

@@ -75,6 +75,10 @@ export class WatchService {
 
       const cid = await this.pinataService.uploadWatchMetadata({
         serialNum: data.serialNum,
+        brand: data.brand ?? null,
+        model: data.model ?? null,
+        referenceNumber: data.referenceNumber ?? null,
+        yearOfProduction: data.yearOfProduction ?? null,
         registeredAt: new Date().toISOString(),
         ownerUsername: owner.username,
         previousCid: null,

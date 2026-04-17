@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent, Int } from '@nestjs/graphql';
 import { OwnershipLog, OwnershipLogSelect } from './model';
 import { OwnershipLogService } from './ownership-log.service';
 import { GraphQLFields, IGraphQLFields } from '@decorators';
@@ -22,6 +22,14 @@ export class OwnershipLogResolver{
     @GraphQLFields() { fields }: IGraphQLFields<OwnershipLogSelect>
   ): Promise<OwnershipLog[]> {
     return this.ownershipLogService.findOwnershipLogsPerWatchId(args, fields);
+  }
+
+  @Query(() => [OwnershipLog])
+  @UseGuards(JwtAuthGuard)
+  public async userActivity(
+    @Args('userId', { type: () => Int }) userId: number,
+  ): Promise<OwnershipLog[]> {
+    return this.ownershipLogService.findActivityForUser(userId);
   }
 
   @ResolveField(() => String, { nullable: true })

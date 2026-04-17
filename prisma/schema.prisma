@@ -17,23 +17,31 @@ model User{
   createdAt     DateTime  @default(now()) @map("created_at")
   resetToken        String?   @map("reset_token")
   resetTokenExpiry  DateTime? @map("reset_token_expiry")
-  watch         Watch[]
-  ownershipLog  OwnershipLog[]
+  watch               Watch[]
+  ownershipLog        OwnershipLog[]
+  transfersFrom       TransferRequest[] @relation("transferFrom")
+  transfersTo         TransferRequest[] @relation("transferTo")
 
   @@map("Users")
 }
 
 model Watch{
-  id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [ownerId], references: [id])
-  ownerId       Int       @map("owner_id")
-  serialNum     String    @unique @map("serial_num")
-  metadataURI   String?   @map("metadata_uri")
-  tokenId       String?   @map("token_id")
-  txHash        String?   @map("tx_hash")
-  mintStatus    MintStatus @default(PENDING) @map("mint_status")
-  lastSynced    DateTime  @map("last_synced")
-  ownershipLog  OwnershipLog[]
+  id              Int       @id @default(autoincrement())
+  user            User      @relation(fields: [ownerId], references: [id])
+  ownerId         Int       @map("owner_id")
+  serialNum       String    @unique @map("serial_num")
+  brand           String?
+  model           String?
+  referenceNumber String?   @map("reference_number")
+  yearOfProduction Int?     @map("year_of_production")
+  imageUrl        String?   @map("image_url")
+  metadataURI     String?   @map("metadata_uri")
+  tokenId         String?   @map("token_id")
+  txHash          String?   @map("tx_hash")
+  mintStatus      MintStatus @default(PENDING) @map("mint_status")
+  lastSynced         DateTime  @map("last_synced")
+  ownershipLog       OwnershipLog[]
+  transferRequests   TransferRequest[]
 
   @@map("Watchs")
 }
@@ -48,6 +56,27 @@ model OwnershipLog{
   timestamp     DateTime  @default(now())
 
   @@map("Ownershiplogs")
+}
+
+model TransferRequest {
+  id            Int             @id @default(autoincrement())
+  watch         Watch           @relation(fields: [watchId], references: [id])
+  watchId       Int             @map("watch_id")
+  fromUser      User            @relation("transferFrom", fields: [fromUserId], references: [id])
+  fromUserId    Int             @map("from_user_id")
+  toUser        User            @relation("transferTo", fields: [toUserId], references: [id])
+  toUserId      Int             @map("to_user_id")
+  status        TransferStatus  @default(PENDING)
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  @@map("TransferRequests")
+}
+
+enum TransferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum Language {

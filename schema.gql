@@ -22,6 +22,11 @@ type Watch {
   id: Float!
   ownerId: Float!
   serialNum: String
+  brand: String
+  model: String
+  referenceNumber: String
+  yearOfProduction: Float
+  imageUrl: String
   metadataURI: String
   lastSynced: DateTime!
   ownershipLog: [OwnershipLog!]
@@ -49,6 +54,18 @@ type LoginOutput {
   user: User!
 }
 
+type TransferRequest {
+  id: Float!
+  watchId: Float!
+  fromUserId: Float!
+  toUserId: Float!
+  status: String!
+  createdAt: DateTime!
+  watch: Watch
+  fromUser: User
+  toUser: User
+}
+
 type Query {
   login(data: LoginUserInput!): LoginOutput!
   refreshUser(data: String!): LoginOutput!
@@ -56,6 +73,9 @@ type Query {
   watch(where: WatchWhereInput!): Watch!
   watches(where: WatchWhereInput!): [Watch!]!
   OwnershipLogs(where: OwnershipLogWhereInput!): [OwnershipLog!]!
+  userActivity(userId: Int!): [OwnershipLog!]!
+  pendingTransferRequests(userId: Int!): [TransferRequest!]!
+  sentTransferRequests(userId: Int!): [TransferRequest!]!
 }
 
 input LoginUserInput {
@@ -87,8 +107,11 @@ type Mutation {
   forgotPassword(data: ForgotPasswordInput!): Boolean!
   resetPassword(data: ResetPasswordInput!): Boolean!
   createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!): User!
   createWatch(data: WatchCreateInput!): Watch!
   changeWatchOwnership(data: WatchUpdateInput!): Watch!
+  createTransferRequest(data: CreateTransferRequestInput!): TransferRequest!
+  respondToTransferRequest(data: RespondTransferRequestInput!): TransferRequest!
 }
 
 input ContactInput {
@@ -118,9 +141,21 @@ input UserCreateInput {
   password: String!
 }
 
+input UserUpdateInput {
+  id: Int!
+  username: String
+  currentPassword: String
+  newPassword: String
+}
+
 input WatchCreateInput {
   ownerId: Int!
   serialNum: String
+  brand: String
+  model: String
+  referenceNumber: String
+  yearOfProduction: Int
+  imageUrl: String
   metadataURI: String
   lastSynced: DateTime!
 }
@@ -131,4 +166,16 @@ input WatchUpdateInput {
   serialNum: String!
   metadataURI: String!
   lastSynced: DateTime!
+}
+
+input CreateTransferRequestInput {
+  watchId: Int!
+  fromUserId: Int!
+  toUserEmail: String!
+}
+
+input RespondTransferRequestInput {
+  transferRequestId: Int!
+  userId: Int!
+  accept: Boolean!
 }

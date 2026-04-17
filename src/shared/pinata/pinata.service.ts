@@ -4,6 +4,10 @@ import { ConfigService } from '../config/config.service';
 
 export interface WatchMetadata {
   serialNum: string;
+  brand?: string | null;
+  model?: string | null;
+  referenceNumber?: string | null;
+  yearOfProduction?: number | null;
   registeredAt: string;
   ownerUsername: string;
   previousCid?: string | null;
