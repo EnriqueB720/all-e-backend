@@ -18,6 +18,7 @@ import { ContactModule } from './api/contact/contact.module';
     ThrottlerModule.forRoot([
       { name: 'short', ttl: 1000, limit: 10 },
       { name: 'medium', ttl: 60_000, limit: 100 },
+      { name: 'auth', ttl: 60_000, limit: 5 },
     ]),
     JwtModule.register({
       global: true,

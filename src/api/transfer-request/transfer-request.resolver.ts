@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation, Int } from '@nestjs/graphql';
 import { TransferRequest } from './model';
 import { TransferRequestService } from './transfer-request.service';
-import { CreateTransferRequestInput, RespondTransferRequestInput } from './dto';
+import { CancelTransferRequestInput, CreateTransferRequestInput, RespondTransferRequestInput } from './dto';
 import { JwtAuthGuard } from '../../shared/auth/guards';
 
 @Resolver(() => TransferRequest)
@@ -22,6 +22,13 @@ export class TransferRequestResolver {
     @Args('data') data: RespondTransferRequestInput,
   ): Promise<TransferRequest> {
     return this.transferRequestService.respond(data);
+  }
+
+  @Mutation(() => TransferRequest)
+  async cancelTransferRequest(
+    @Args('data') data: CancelTransferRequestInput,
+  ): Promise<TransferRequest> {
+    return this.transferRequestService.cancel(data);
   }
 
   @Query(() => [TransferRequest])

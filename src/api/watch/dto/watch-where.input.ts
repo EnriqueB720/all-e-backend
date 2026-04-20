@@ -13,4 +13,10 @@ export class WatchWhereInput {
 
   @Field(() => String, { nullable: true })
   username?: string;
+
+  @Field(() => String, { nullable: true })
+  brand?: string;
+
+  @Field(() => String, { nullable: true })
+  model?: string;
 }

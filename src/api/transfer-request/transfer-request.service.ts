@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma-datasource';
-import { CreateTransferRequestInput, RespondTransferRequestInput } from './dto';
+import { CancelTransferRequestInput, CreateTransferRequestInput, RespondTransferRequestInput } from './dto';
 import { WatchService } from '../watch/watch.service';
 
 @Injectable()
@@ -80,6 +80,30 @@ export class TransferRequestService {
     return this.prismaService.transferRequest.update({
       where: { id: data.transferRequestId },
       data: { status: data.accept ? 'ACCEPTED' : 'REJECTED' },
+      include: { watch: true, fromUser: true, toUser: true },
+    });
+  }
+
+  async cancel(data: CancelTransferRequestInput) {
+    const request = await this.prismaService.transferRequest.findUnique({
+      where: { id: data.transferRequestId },
+    });
+
+    if (!request) {
+      throw new BadRequestException('Transfer request not found');
+    }
+
+    if (request.fromUserId !== data.userId) {
+      throw new BadRequestException('You are not the sender of this transfer');
+    }
+
+    if (request.status !== 'PENDING') {
+      throw new BadRequestException('Only pending transfers can be cancelled');
+    }
+
+    return this.prismaService.transferRequest.update({
+      where: { id: data.transferRequestId },
+      data: { status: 'CANCELLED' },
       include: { watch: true, fromUser: true, toUser: true },
     });
   }

@@ -94,6 +94,8 @@ input WatchWhereInput {
   ownerId: Int
   serialNum: String
   username: String
+  brand: String
+  model: String
 }
 
 input OwnershipLogWhereInput {
@@ -112,6 +114,7 @@ type Mutation {
   changeWatchOwnership(data: WatchUpdateInput!): Watch!
   createTransferRequest(data: CreateTransferRequestInput!): TransferRequest!
   respondToTransferRequest(data: RespondTransferRequestInput!): TransferRequest!
+  cancelTransferRequest(data: CancelTransferRequestInput!): TransferRequest!
 }
 
 input ContactInput {
@@ -178,4 +181,9 @@ input RespondTransferRequestInput {
   transferRequestId: Int!
   userId: Int!
   accept: Boolean!
+}
+
+input CancelTransferRequestInput {
+  transferRequestId: Int!
+  userId: Int!
 }

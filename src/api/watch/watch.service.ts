@@ -36,7 +36,7 @@ export class WatchService {
     { where }: WatchArgs,
     { select }: WatchSelect,
   ): Promise<Watch[]> {
-    const { username, ...rest } = where;
+    const { username, brand, model, ...rest } = where;
 
     const cleanWhere: any = Object.fromEntries(
       Object.entries(rest).filter(([_, v]) => v != null && v !== 0),
@@ -46,9 +46,17 @@ export class WatchService {
       cleanWhere.user = { username };
     }
 
+    if (brand) {
+      cleanWhere.brand = { contains: brand, mode: 'insensitive' };
+    }
+
+    if (model) {
+      cleanWhere.model = { contains: model, mode: 'insensitive' };
+    }
+
     if (Object.keys(cleanWhere).length === 0) {
       throw new BadRequestException(
-        'At least one filter is required (serialNum, username, or ownerId)',
+        'At least one filter is required (serialNum, username, brand, or model)',
       );
     }
 
